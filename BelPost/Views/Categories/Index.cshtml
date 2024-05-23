@@ -1,0 +1,61 @@
+﻿@model IEnumerable<BelPost.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<head>
+    <link rel="stylesheet" href="~/css/PostageStamp.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+@await Html.PartialAsync("_SearchView")
+<div style="display:flex; justify-content:space-between; align-items:end;">
+    <h2 class="display-6">Продукция</h2>
+   @* <form asp-action="index" style="display:flex; gap:20px; align-items:baseline;">
+        <h2 class="display-10">Фильтр</h2>
+        <select name="year" class="FiltrYear form-control" style="border-radius: 5px;height: 80%;"></select>
+        <input class="btn" style="border:2px solid white; color:white" type="submit" />
+    </form>*@
+</div>
+@if (User.IsInRole("admin"))
+{
+    <a class="submitBtn" asp-action="Create">Добавить</a>
+}
+
+<div class="containerPostageStampCard">
+    <nav class="navPost">
+        <ul class="nav">
+            <li><a asp-controller="Categories" asp-action="Index" style="color:royalblue!important" class="nav-link">Марки</a></li>
+            <li><a asp-controller="PostalLetterCards" asp-action="Index" asp-route-type="Letter" style="color:royalblue!important" class="nav-link">Конверты</a></li>
+            <li><a asp-controller="PostalLetterCards" asp-action="Index" asp-route-type="Card" style="color:royalblue!important" class="nav-link">Карточки</a></li>
+
+        </ul>
+    </nav>
+    @foreach (var item in Model)
+    {
+        <a asp-action="Details" asp-controller="Categories" asp-route-id="@item.Id">
+
+            <div class="PostageStampCard ">
+                <p class="PostageStampName name">@item.Name<br/>
+                    <br />
+                <span class="PostageStampNumber"> Листок №@item.Id</span>
+                </p>
+                <div class="imgContainer">
+                    @if (item.Img != null)
+                    {
+                        <img class="result-box" src="data:image/png;base64,@(Convert.ToBase64String(item.Img))" />
+                    }
+                </div>
+                @if (User.IsInRole("admin"))
+                {
+                    <div>
+                        <a class="btn btn-primary"  asp-route-id="@item.Id" asp-action="Edit">Изменить</a>
+                        <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">Удалить</a>
+                    </div>
+                }
+
+            </div>
+        </a>
+    }
+</div>
+<script src="~/js/search.js"/>

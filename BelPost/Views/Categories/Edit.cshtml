@@ -1,0 +1,51 @@
+﻿@model BelPost.Models.Category
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/Form.css" />
+</head>
+<form class="form" method="post" asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <p class="title">Изменение листка</p>
+    <p class="message">Собирай свои коллекции</p>
+
+    <label>
+        <input required="" asp-for="Name" placeholder="" type="text" class="input">
+        <span>Название</span>
+    </label>
+    <span asp-validation-for="Name" class="text-danger"></span>
+
+        
+    <label>
+        <span>Описание</span>
+        <textarea type="text" asp-for="Description" class="input"></textarea>
+
+    </label>
+    <span asp-validation-for="Description" class="text-danger"></span>
+
+    <label>
+        <span>Картинка</span>
+
+
+        <input type="file" accept="image/png, image/jpeg" class="input__file" name="picFromView">
+        
+    </label>
+    <span asp-validation-for="Img" class="text-danger"></span>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <button class="submitBtn">Изменить</button>
+    <a class="submitBtn" asp-action="Index">Назад</a>
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+

@@ -1,0 +1,121 @@
+﻿@model BelPost.Models.Category
+
+@{
+    ViewData["Title"] = "Index";
+}
+<head>
+    <link rel="stylesheet" href="~/css/PostageStamp.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+@await Html.PartialAsync("_SearchView")
+
+<div style="display:flex; justify-content:space-between; align-items:baseline;">
+@if (ViewBag.nameUser!=null && ViewBag.nameUser!=User.Identity.Name)
+{
+    <a class="submitBtn" asp-controller="Dialog" asp-action="IndexDialog" asp-route-IdReceiver="@ViewBag.nameUser">Написать</a>
+
+}
+<form asp-action="IndexForUser" style="display:flex; gap:20px; align-items:baseline;">
+    <h2 class="display-10">Фильтр</h2>
+    <input value="@ViewBag.Type" name="type" hidden />
+    <p>с</p>
+    <input name="DateStart" type="date" class="FiltrYear form-control" style="border-radius: 5px;height: 80%;" />
+    <p>по</p>
+    <input name="DateEnd" type="date" class="FiltrYear form-control" style="border-radius: 5px;height: 80%;" />
+    <input class="btn" style="border:2px solid white; color:white" type="submit" />
+</form>
+</div>
+<div class="containerPostageStampCard " style="height: 50vh; overflow:hidden;">
+    @if (ViewBag.nameUser != null && ViewBag.nameUser != User.Identity.Name)
+    {
+        <nav class="navPost">
+            <ul class="nav">
+                <li><a asp-controller="Categories" asp-route-nameUser="@ViewBag.nameUser" asp-action="IndexForUser" class="nav-link" style="color:royalblue!important">Марки</a></li>
+                <li><a asp-controller="PostalLetterCards" asp-route-User="@ViewBag.nameUser" asp-action="IndexForUser" asp-route-type="Letter" style="color:royalblue!important" class="nav-link">Конверты</a></li>
+                <li><a asp-controller="PostalLetterCards" asp-route-User="@ViewBag.nameUser" asp-action="IndexForUser" asp-route-type="Card" style="color:royalblue!important" class="nav-link">Карточки</a></li>
+                </ul>
+        </nav>
+    }
+    else
+    {
+          <nav class="navPost">
+            <ul class="nav">
+                <li><a asp-controller="Categories" asp-action="IndexForUser" class="nav-link" style="color:royalblue!important">Марки</a></li>
+                    <li><a asp-controller="PostalLetterCards" asp-action="IndexForUser" asp-route-type="Letter" style="color:royalblue!important" class="nav-link">Конверты</a></li>
+                    <li><a asp-controller="PostalLetterCards" asp-action="IndexForUser" asp-route-type="Card" style="color:royalblue!important" class="nav-link">Карточки</a></li>
+                </ul>
+        </nav>
+    }
+    <div class="PostageStampCard noHover" style="width: 60%;height: fit-content; border: none; gap: 20px;">
+        <p class="PostageStampName">
+            @Model.Name <br /><br />
+        <span class="PostageStampNumber">
+            Листок №@Model.Id</span>
+            </p>
+        <p class="PostageStampNumber">@Model.Description</p>
+    </div>
+    <div class="imgContainer" style="width:30%; height:80%">
+        @if (Model.Img != null)
+        {
+            <img style="max-height: 100%;max-width: 100%;" class="result-box" src="data:image/png;base64,@(Convert.ToBase64String(Model.Img))" />
+        }
+
+    </div>
+
+</div>
+
+<div class="containerPostageStampCard">
+    @foreach (var item in Model.PostageStamps)
+    {
+            <div class="PostageStampCard ">
+                <p class="PostageStampName name">@item.Name</p>
+                <p class="PostageStampNumber">Марка №@item.Id</p>
+                <div class="Cirle"><p>@item.Letter</p></div>
+                <div class="imgContainer">
+                @if (item.Img != null)
+                    {
+                    <img class="result-box" src="data:image/png;base64,@(Convert.ToBase64String(item.Img))" />
+                    }
+                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="containerCounter">
+
+                        @if (ViewBag.nameUser ==null)
+                        {
+                            <a asp-action="DeleteToUser" asp-route-idStamp="@item.Id">-</a>
+
+                            <h1 id="Counter" style="color:black; font-size:14px;">
+                                @await Component.InvokeAsync("Count", new {Name = User.Identity.Name, idStamp=item.Id})
+                            </h1>
+                            <a asp-action="AddToUser" asp-route-idStamp="@item.Id">+</a>
+                        }
+                        else
+                        {
+                            <h1 id="Counter" style="color:black; font-size:14px;">
+
+                                @await Component.InvokeAsync("Count", new {Name = ViewBag.nameUser, idStamp=item.Id})
+                            </h1>
+
+                        }
+
+                    </div>
+                }
+
+            </div>
+    }
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var counters = document.querySelectorAll("#Counter");
+        counters.forEach(function (counter) {
+            var countText = counter.textContent;
+            var counts = countText.split(" из ");
+            if (parseInt(counts[0]) >= parseInt(counts[1]) && parseInt(counts[0]) != 0 && parseInt(counts[1])!=0) {
+                counter.closest(".PostageStampCard").style.border = "4px solid #1fbd1f";
+            }
+        });
+    });
+</script>
+<script src="~/js/search.js" />

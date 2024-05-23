@@ -1,0 +1,184 @@
+﻿@model IEnumerable<BelPost.ViewModels.ProfileView>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/UserCard.css" />
+    <link rel="stylesheet" href="~/css/Form.css" />
+</head>
+@await Html.PartialAsync("_SearchView")
+<form class="form" asp-action="Filtr" enctype="multipart/form-data">
+    <div class="grid">
+
+        <label>
+        <span>Фамилия</span>
+        <input name="userSurname" placeholder="" type="text" class="input">
+    </label>
+    <label>
+        <span>Имя</span>
+        <input name="userName" placeholder="" type="text" class="input">
+    </label>
+    <label>
+        <span>Информационный листок</span>
+        <select name="CategoryId" class="form-control" class="input" asp-items="ViewBag.CategoryId"></select>
+
+    </label>
+        <button class="submitBtn home">Отфильтровать</button>
+    </div>
+</form>
+@if (User.Identity.IsAuthenticated && !User.IsInRole("admin"))
+{
+    <nav class="navPost" style="background:white" >
+        <ul class="nav">
+            @if (ViewBag.isBlock == null)
+            {
+                <li><a asp-controller="Home" asp-action="Index" style="color:royalblue!important" class="nav-link active">Все пользователи</a></li>
+                <li><a asp-controller="Home" asp-action="Index" asp-route-isBlock="yes" style="color:royalblue!important" class="nav-link">Черный список</a></li>
+
+            }
+            else
+            {
+                <li><a asp-controller="Home" asp-action="Index" style="color:royalblue!important" class="nav-link ">Все пользователи</a></li>
+                <li><a asp-controller="Home" asp-action="Index" asp-route-isBlock="yes" style="color:royalblue!important" class="nav-link active">Черный список</a></li>
+
+            }
+        </ul>
+    </nav>
+}
+<div class="UsersContainer">
+ 
+    @foreach(var user in Model)
+    {
+        <div class="card">
+            <div class="infos">
+                <div class="image">
+                    @if (user.Img != null)
+                    {
+                        <img class="image" src="data:image/png;base64,@(Convert.ToBase64String(user.Img))" />
+                    }
+                    else
+                    {
+                        <img class="image" src="~/images/Icons/defaulfUser.png" />
+                    }
+                </div>
+                <div class="info">
+                    <div>
+                        <p class="name">
+                        @user.FirstName @user.LastName
+                        </p>
+                    </div>
+                    <div class="stats">
+                        <p class="flexCardUser flex-col">
+                            Марок
+                            
+                                @if (user.FullUserStamp == null) {
+                                   <span class="state-value"> 0 </span >
+                                }
+                            else
+                            {
+                                <span class="state-value">@user.FullUserStamp </span>
+                            }
+                                      
+                                   </p>
+                        <p class="flexCardUser">
+                            Коллекций
+                            <span class="state-value">
+                                @user.UserCollection
+                            </span>
+                        </p>
+                    </div>
+                                        <div class="stats">
+
+                        <p class="flexCardUser flex-col">
+                            Конвертов
+
+                            @if (user.FullUserLetter == null)
+                            {
+                                <span class="state-value"> 0 </span>
+                            }
+                            else
+                            {
+                                <span class="state-value">@user.FullUserLetter </span>
+                            }
+
+                        </p>
+                        <p class="flexCardUser">
+                            Карточек
+                            @if (user.FullUserCards == null)
+                            {
+                                <span class="state-value"> 0 </span>
+                            }
+                            else
+                            {
+                                <span class="state-value">@user.FullUserCards </span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerButton">
+                @if (user.IdWhoBlocked != null && ViewBag.IdUser != null && user.IdWhoBlocked.Contains(ViewBag.IdUser))
+                {
+                     <button class="request" type="button" style="width:100%">
+                        <a asp-controller="Account" asp-action="Unblock" asp-route-id="@user.Id">Разблокировать</a>
+                    </button>
+                }
+                else if (user.IdWhoDidBlock != null && ViewBag.IdUser!=null && user.IdWhoDidBlock.Contains(ViewBag.IdUser))
+                {
+                    <p class="name">Вы заблокированы</p>
+                     @if (User.IsInRole("admin"))
+                    {
+                        <button class="request" type="button">
+                            <a asp-controller="Account" asp-action="Delete" asp-route-id="@user.Id">Удалить</a>
+                        </button>
+                    }else{
+                    <button class="request" type="button">
+                        <a asp-controller="Account" asp-action="Block" asp-route-id="@user.Id">Блокировать</a>
+                    </button>
+                    }
+
+                }else {
+                    <button class="request" type="button">
+                    <a asp-controller="Dialog" asp-action="IndexDialog" asp-route-IdReceiver="@user.UserName">Написать</a>
+            </button>
+            <button class="request" type="button">
+                    <a  asp-controller="Account" asp-action="Profile" asp-route-name="@user.UserName">Профиль</a>
+            </button>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <button class="request" type="button">
+                            <a asp-controller="Account" asp-action="Delete" asp-route-id="@user.Id">Удалить</a>
+                        </button>
+                    }else{
+                    <button class="request" type="button">
+                        <a asp-controller="Account" asp-action="Block" asp-route-id="@user.Id">Блокировать</a>
+                    </button>
+                    }
+                }
+            </div>
+        </div>
+
+           
+            
+       
+    }
+</div>
+<script >
+    var search = document.querySelector(".search");
+    search.addEventListener('input', function () { // Изменено на 'input'
+        console.log(search.value); // Использование value вместо textContent
+        document.querySelectorAll(".name").forEach(u => {
+            console.log(u.textContent)
+            if (u.textContent.toLowerCase().includes(search.value.toLowerCase()) && search.value != "") { // Приведение к нижнему регистру
+                console.log("00000")
+                u.closest(".card").style.border = "4px solid black";
+            } else {
+                if (u.closest(".card").style.border != "4px solid rgb(31, 189, 31)") {
+                    u.closest(".card").style.border = "2px solid rgba(0, 92, 169, 1)"; // Сброс границы
+                }
+            }
+        })
+    })
+</script>
+<script src="~/js/filtr.js"/>

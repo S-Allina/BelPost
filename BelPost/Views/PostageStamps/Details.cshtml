@@ -1,0 +1,42 @@
+﻿@model BelPost.Models.PostageStamp
+
+@{
+    ViewData["Title"] = "Details";
+}
+<head>
+    <link rel="stylesheet" href="~/css/PostageStamp.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+<div class="containerPostageStampCard " style="height: 50vh; overflow:hidden;">
+    <div class="PostageStampCard noHover" style="width:60%; border:none;" >
+        <div>
+            <a asp-action="Details" asp-controller="Categories" asp-route-id="@Model.CategoryId">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+            </svg> 
+            Назад
+        </a>
+        </div>
+    <p class="PostageStampName">@Model.Name</p>
+    <p class="PostageStampNumber">Марка №@Model.Id</p>
+        <p class="PostageStampNumber">Дата ввода в оборот: @Model.Date.ToString().Split(' ')[0]</p>
+    <div class="Cirle"><p>@Model.Letter</p></div>
+        <p>В составе информационного листка: @ViewBag.Category</p>
+         @if (User.IsInRole("admin"))
+                {
+                    <div>
+            <a class="btn btn-primary" asp-route-id="@Model?.Id" asp-action="Edit">Изменить</a>
+            <a class="btn btn-danger" asp-route-id="@Model?.Id" asp-action="Delete">Удалить</a>
+                    </div>
+                }
+        </div>
+    <div class="imgContainer" style="width:30%">
+        @if (Model.Img != null)
+                    {
+            <img style="max-height: 100%;max-width: 100%;" class="result-box" src="data:image/png;base64,@(Convert.ToBase64String(Model.Img))" />
+                    }
+       
+                </div>
+               
+</div>

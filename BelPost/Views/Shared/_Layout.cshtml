@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNetCore.Identity
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Collection Service</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="part">
+                <a href="https://belpost.by/">
+            <img src="~/images/logo-light_ru.png" />
+            <p style="overflow-wrap:break-word;">
+                Национальный оператор почтовой связи
+                Республики Беларусь
+            </p>
+            </a>
+            </div>
+         @if (User.Identity.IsAuthenticated)
+            {
+                <div class="part">
+                    <a class="nav-link text-dark" title="Manage" asp-controller="Account" asp-action="Profile" asp-route-name="@User.Identity.Name">@User.Identity.Name</a>
+              
+                    <form class="form-inline" asp-controller="Account" asp-action="Logout">
+                        <input class="logout" type="submit" value="Выход"/>
+                    </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="part">
+                        <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
+               
+                        <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Вход</a>
+                </div>
+                }
+        </nav>
+      
+    </header>
+    <div class="blue-banner"></div>
+ 
+    <div class="container">
+      <div style="height:130px"></div>
+          <nav>
+        <ul class="nav">
+                <li><a asp-controller="Home" asp-route-type="Stamp" asp-action="IndexTop" class="nav-link">Топ</a></li>
+                <li><a asp-controller="Home" asp-action="Index" class="nav-link" >Все пользователи</a></li>
+                <li><a asp-controller="Categories" asp-action="Index" class="nav-link">Продукция</a></li>
+            @if (User.Identity.IsAuthenticated)
+            {
+
+                <li><a asp-controller="Account" asp-action="Profile" asp-route-Name="@User.Identity.Name" class="nav-link" >Профиль</a></li>
+                <li><a asp-controller="Dialog" asp-action="DialogUser" class="nav-link" >Чаты</a></li>
+                    <li><a asp-controller="Categories" asp-action="IndexForUser"  class="nav-link">Мои коллекции</a></li>
+            }
+        </ul>
+    </nav>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script>
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        navLinks.forEach(function (link) {
+            link.addEventListener('click', function () {
+                navLinks.forEach(function (link) {
+                    link.classList.remove('activie');
+                });
+                this.classList.add('activie');
+            });
+        });
+        </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

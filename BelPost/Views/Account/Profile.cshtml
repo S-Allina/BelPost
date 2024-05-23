@@ -1,0 +1,160 @@
+﻿@model BelPost.ViewModels.ProfileView
+
+
+<head>
+    <link rel="stylesheet" href="~/css/Profile.css" />
+    <!-- Option 1: Include in HTML -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+
+@if (Model.UserName != User.Identity.Name)
+{
+    <h2 class="display-4">Профиль </h2>
+    <div class="results-summary-container">
+        <div class="results-summary-container__result">
+
+            <div class="result-box">
+                @if (Model.Img != null)
+                {
+                    <img class="result-box" src="data:image/png;base64,@(Convert.ToBase64String(Model.Img))" />
+                }
+                else
+                {
+                    <img class="result-box" src="~/images/Icons/defaulfUser.png" />
+                }
+            </div>
+            <div class="heading-tertiary">@Model.LastName @Model.FirstName</div>
+            <div class="result-text-box">
+                <div class="heading-secondary">Логин: @Model.UserName</div>
+            </div>
+            <div class="result-text-box">
+                <div class="heading-secondary">Email: @Model.Email</div>
+            </div>
+        </div>
+        <div class="results-summary-container__options">
+            <div class="heading-secondary heading-secondary--blue">Собрано</div>
+            <div class="summary-result-options">
+                <div class="result-option result-option-reaction">
+                    <div class="icon-box">
+                        <i class="bi bi-postage-heart"></i>
+                        <span class="reaction-icon-text">Марки</span>
+                    </div>
+                    <div class="result-box"><span>@Model.FullUserStamp</span></div>
+                </div>
+                <div class="result-option result-option-memory">
+                    <div class="icon-box">
+                        <i class="bi bi-envelope"></i>
+                        <span class="memory-icon-text">Конверты</span>
+                    </div>
+                    <div class="result-box"><span>@Model.FullUserLetter</span></div>
+                </div>
+                <div class="result-option result-option-verbal">
+                    <div class="icon-box">
+                        <i class="bi bi-postcard"></i>
+                        <span class="verbal-icon-text">Карточки</span>
+                    </div>
+                    <div class="result-box"><span>@Model.FullUserCards</span></div>
+                </div>
+                <div class="result-option result-option-Visual">
+                    <div class="icon-box">
+                        <i class="bi bi-collection"></i>
+                        <span class="visual-icon-text">Информационные листки</span>
+                    </div>
+                    <div class="result-box"><span>@Model.UserCollection</span></div>
+                </div>
+                @*  <div class="summary__cta">
+                <button class="btn btn__continue">Continue</button>
+            </div>*@
+                <div>
+                  
+                        <div class="ContainerButton">
+                            <a class="btn request" asp-controller="Dialog" asp-action="IndexDialog" asp-route-IdReceiver="@Model.UserName">Написать</a>
+
+                        <a class="btn request" asp-controller="Categories" asp-action="IndexForUser" asp-route-nameUser="@Model.UserName">Открыть марки</a>
+                        <a class="btn request" asp-controller="PostalLetterCards" asp-route-type="Letter" asp-action="IndexForUser" asp-route-User="@Model.UserName">Открыть конверты</a>
+                        <a class="btn request" asp-controller="PostalLetterCards" asp-route-type="Cards" asp-action="IndexForUser" asp-route-User="@Model.UserName">Открыть карточки</a>
+
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2 class="display-4">Мой профиль</h2>
+    <div class="results-summary-container">
+        <form asp-action="Edit" asp-route-userId="@Model.Id" class="results-summary-container__result" enctype="multipart/form-data">
+
+            <div class="result-box">
+                @if (Model.Img != null)
+                {
+                    <img class="result-box" src="data:image/png;base64,@(Convert.ToBase64String(Model.Img))" />
+                }
+                else
+                {
+                    <img class="result-box" src="~/images/Icons/defaulfUser.png" />
+                }
+                
+            </div>
+            <input name="picFromView"  type="file" class="form-control"/>
+            <div class="ContainerButton">
+                <div style="width:49%;">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div> <div style="width:49%">
+                <label asp-for="LastName" class="control-label">Фамилия</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>  <div style="width:49%">
+                <label asp-for="UserName" class="control-label">Логин</label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+                </div> <div style="width:49%">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+                   </div>
+            </div>
+            <button type="submit" class="btn request">Сохранить</button>
+        </form>
+        <div class="results-summary-container__options">
+            <div class="heading-secondary heading-secondary--blue">Собрано</div>
+            <div class="summary-result-options">
+                <div class="result-option result-option-reaction">
+                    <div class="icon-box">
+                        <i class="bi bi-postage-heart"></i>
+                        <span class="reaction-icon-text">Марки</span>
+                    </div>
+                    <div class="result-box"><span>@Model.FullUserStamp</span></div>
+                </div>
+                <div class="result-option result-option-memory">
+                    <div class="icon-box">
+                        <i class="bi bi-envelope"></i>
+                        <span class="memory-icon-text">Конверты</span>
+                    </div>
+                    <div class="result-box"><span>@Model.FullUserLetter</span></div>
+                </div>
+                <div class="result-option result-option-verbal">
+                    <div class="icon-box">
+                        <i class="bi bi-postcard"></i>
+                        <span class="verbal-icon-text">Карточки</span>
+                    </div>
+                    <div class="result-box"><span>@Model.FullUserCards</span></div>
+                </div>
+                <div class="result-option result-option-Visual">
+                    <div class="icon-box">
+                        <i class="bi bi-collection"></i>
+                        <span class="visual-icon-text">Информационные листки</span>
+                    </div>
+                    <div class="result-box"><span>@Model.UserCollection</span></div>
+                </div>
+                @*  <div class="summary__cta">
+            <button class="btn btn__continue">Continue</button>
+            </div>*@
+            </div>
+        </div>
+    </div>
+}
+

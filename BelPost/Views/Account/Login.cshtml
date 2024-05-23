@@ -1,0 +1,26 @@
+﻿@model BelPost.ViewModels.LoginViewModel
+
+
+<head>
+    <link rel="stylesheet" href="~/css/Form.css" />
+
+</head>
+<form class="form" method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
+    <p class="title">Вход</p>
+    <p class="message">Собирай свои коллекции</p>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+        <label>
+              <span>Логин</span>
+            <input required="" asp-for="Name" placeholder="" type="text" class="input">
+        </label>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    <label>
+          <span>Пароль</span>
+        <input required="" asp-for="Password" placeholder="" type="password" class="input">
+    </label>
+    <span asp-validation-for="Password" class="text-danger"></span>
+
+    <button class="submitBtn">Войти</button>
+    <p class="signin">Ещё нет аккаунта? <a asp-controller="Account" asp-action="Register">Регистрация</a> </p>
+</form>

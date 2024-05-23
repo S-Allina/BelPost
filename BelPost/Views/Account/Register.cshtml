@@ -1,0 +1,61 @@
+﻿@model BelPost.ViewModels.RegisterViewModel
+
+
+<head>
+    <link rel="stylesheet" href="~/css/Form.css" />
+</head>
+<form class="form" method="post" asp-controller="Account" asp-action="Register" enctype="multipart/form-data">
+    <p class="title">Регистрация</p>
+    <p class="message">Собирай свои коллекции</p>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="flex">
+        <label>
+            <input required="" asp-for="FirstName" placeholder="" type="text" class="input">
+            <span>Имя</span>
+
+        </label>
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+
+        <label>
+            <input asp-for="LastName" required="" placeholder="" type="text" class="input">
+            <span>Фамилия</span>
+        </label>
+        <span asp-validation-for="LastName" class="text-danger"></span>
+
+    </div>
+    <label>
+           <span>Логин</span>
+        <input asp-for="UserName" required="" placeholder="" type="text" class="input">
+     
+    </label>
+    <span asp-validation-for="UserName" class="text-danger"></span>
+
+    <label>
+        <input asp-for="Email" required="" placeholder="" type="email" class="input">
+        <span>Email</span>
+    </label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+
+    <label>
+           <span>Пароль</span>
+        <input required="" asp-for="Password" placeholder="" type="password" class="input">
+     
+    </label>
+    <span asp-validation-for="Password" class="text-danger"></span>
+
+    <label>
+        <input asp-for="PasswordConfirm" required="" placeholder="" type="password" class="input">
+        <span>Повторите пароль</span>
+    </label>
+    <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+    <label>
+            <span>Аватарка</span>
+        <input type="file" asp-for="ImgFromView"  placeholder="" type="file" class="input">
+    
+    </label>
+    <span asp-validation-for="ImgFromView" class="text-danger"></span>
+
+    <button class="submitBtn">Зарегистрироваться</button>
+    <p class="signin">Уже есть аккаунт? <a asp-controller="Account" asp-action="Login">Вход</a> </p>
+</form>

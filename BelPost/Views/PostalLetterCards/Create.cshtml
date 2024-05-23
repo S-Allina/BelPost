@@ -1,0 +1,67 @@
+﻿@model BelPost.ViewModels.PostalLetterCardViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<head>
+    <link rel="stylesheet" href="~/css/Form.css" />
+</head>
+<form class="form" method="post" asp-action="Create" enctype="multipart/form-data">
+    <input hidden asp-for="Type" value="@ViewBag.Type"/>
+    <p class="title">Добавление</p>
+    <p class="message">Собирай свои коллекции</p>
+    <label>
+        <input required="" asp-for="Name" placeholder=""  type="text" class="input">
+        <span>Название</span>
+
+    </label>
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <div class="flex">
+
+        <label>
+            <span>Дата ввода в оборот</span>
+            <input type="date" asp-for="Date"  class="input" />
+
+        </label>
+        @if (ViewBag.Type=="Card")
+        {
+            <label>
+                <span>Буква</span>
+                <input asp-for="Letter" required="" maxlength="1" placeholder="" type="text" class="input">
+
+        </label>
+        }
+        <span asp-validation-for="Letter" class="text-danger"></span>
+        <label>
+            <span>Номер по каталогу</span>
+            <input asp-for="Number" required="" maxlength="5" placeholder="" type="number" class="input">
+
+        </label>
+        <span asp-validation-for="Number" class="text-danger"></span>
+
+    </div>
+
+
+    <label>
+        <span>Картинка</span>
+        <input type="file" asp-for="ImgFromView" placeholder="" type="file" class="input">
+
+    </label>
+    <span asp-validation-for="ImgFromView" class="text-danger"></span>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <button class="submitBtn">Добавить</button>
+    <a class="submitBtn" asp-action="Index">Назад</a>
+</form>
+
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

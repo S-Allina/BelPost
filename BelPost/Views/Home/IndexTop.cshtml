@@ -1,0 +1,123 @@
+﻿@model IEnumerable<BelPost.ViewModels.ProfileView>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/Chat.css" />
+    <link rel="stylesheet" href="~/css/PostageStamp.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+@await Html.PartialAsync("_SearchView")
+
+<div class="wrapper">
+    <div class="card">
+        <section class="top">
+            <nav class="navPost">
+                <ul class="nav">
+                    <li><a asp-controller="Home" asp-action="IndexTop" asp-route-type="Stamp" style="color:royalblue!important" class="nav-link">Марки</a></li>
+                    <li><a asp-controller="Home" asp-action="IndexTop" asp-route-type="Letter" style="color:royalblue!important" class="nav-link">Конверты</a></li>
+                    <li><a asp-controller="Home" asp-action="IndexTop" asp-route-type="Card" style="color:royalblue!important" class="nav-link">Карточки</a></li>
+
+                </ul>
+            </nav>
+        </section>
+        <section class="bottom">
+            <ul class="users">
+              @for(int i=0; i<Model.ToList().Count();i++)
+                {
+
+                    <li class="user" style="grid-template-columns: 0.2fr 0.7fr 1fr 1fr 0.5fr 1.5fr">
+                        <span class="user-name name">@(i+1)</span>
+                        @if (Model.ToList()[i].Img
+ != null)
+                        {
+                            <img src="data:image/png;base64,@(Convert.ToBase64String(Model.ToList()[i].Img))" />
+                        }
+                        else
+                        {
+                            <img src="~/images/Icons/defaulfUser.png" />
+                        }
+                        <span class="user-name name">@Model.ToList()[i].FirstName @Model.ToList()[i].LastName</span>
+                        <span class="user-occupation">@Model.ToList()[i].Email</span>
+                        @if (ViewBag.type == "Letter")
+                        {
+                            <span class="user-occupation">
+                                @if (Model.ToList()[i].FullUserLetter==null) { <span>0</span>}
+                                else{@Model.ToList()[i].FullUserLetter }
+                                / @ViewBag.Full</span>
+                        }else if (ViewBag.type == "Card")
+                        {
+                         <span class="user-occupation">
+                                @if (Model.ToList()[i].FullUserCards==null) { <span>0</span>}
+                                else{@Model.ToList()[i].FullUserCards }
+                             
+                             / @ViewBag.Full</span>
+                        }
+                        else
+                        {
+                            <span class="user-occupation">
+                                @if (Model.ToList()[i].FullUserStamp == null)
+                                {
+                                    <span>0</span>
+                                }
+                                else
+                                {
+                                    @Model.ToList()[i].FullUserStamp
+                                }/ @ViewBag.Full
+                            </span>
+
+                        }
+                        <div class="ContainerButton" style="flex-wrap:nowrap">
+                            @if (Model.ToList()[i].IdWhoBlocked != null && ViewBag.IdUser != null && Model.ToList()[i].IdWhoBlocked.Contains(ViewBag.IdUser))
+                            {
+                                <button class="request" type="button" style="width:100%">
+                                    <a asp-controller="Account" asp-action="Unblock" asp-route-id="@Model.ToList()[i].Id">Разблокировать</a>
+                                </button>
+                            }
+                            else if (Model.ToList()[i].IdWhoDidBlock != null && ViewBag.IdUser != null && Model.ToList()[i].IdWhoDidBlock.Contains(ViewBag.IdUser))
+                            {
+                                <p class="name">Вы заблокированы</p>
+                               
+                                    <button class="request" type="button">
+                                        <a asp-controller="Account" asp-action="Block" asp-route-id="@Model.ToList()[i].Id">Блокировать</a>
+                                    </button>
+                                
+
+                            }
+                            else
+                            {
+                                <button class="request" type="button">
+                                    <a asp-controller="Dialog" asp-action="IndexDialog" asp-route-IdReceiver="@Model.ToList()[i].UserName">Написать</a>
+                                </button>
+                                <button class="request" type="button">
+                                    <a asp-controller="Account" asp-action="Profile" asp-route-name="@Model.ToList()[i].UserName">Профиль</a>
+                                </button>
+                                   
+                                
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+        </section>
+    </div>
+</div>
+<script >
+    var search = document.querySelector(".search");
+    search.addEventListener('input', function () { // Изменено на 'input'
+        console.log(search.value); // Использование value вместо textContent
+        document.querySelectorAll(".name").forEach(u => {
+            console.log(u.textContent)
+            if (u.textContent.toLowerCase().includes(search.value.toLowerCase()) && search.value != "") { // Приведение к нижнему регистру
+                console.log("00000")
+                u.closest(".user").style.border = "4px solid black";
+            } else {
+                if (u.closest(".user").style.border != "4px solid rgb(31, 189, 31)") {
+                    u.closest(".user").style.border = "2px solid rgba(0, 92, 169, 1)"; // Сброс границы
+                }
+            }
+        })
+    })
+</script>
+@*<script src="~/js/filtr.js"/>*@

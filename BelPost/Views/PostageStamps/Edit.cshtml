@@ -1,0 +1,67 @@
+﻿@model BelPost.Models.PostageStamp
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/Form.css" />
+</head>
+<form class="form" method="post" asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <p class="title">Изменение марки</p>
+    <p class="message">Собирай свои коллекции</p>
+
+    <label>
+        <input required="" asp-for="Name" placeholder="" type="text" class="input">
+        <span>Название</span>
+    </label>
+    <span asp-validation-for="Name" class="text-danger"></span>
+
+    <div class="flex">
+        <label>
+            <span>Дата ввода в оборот</span>
+            <input type="date" asp-for="Date" class="input" />
+        </label>
+        <span asp-validation-for="Date" class="text-danger"></span>
+        <label>
+            <span>Буква</span>
+            <input asp-for="Letter" required="" placeholder="" type="text" class="input">
+        </label>
+        <span asp-validation-for="Letter" class="text-danger"></span>
+        <label>
+            <span>Количество их в листке</span>
+            <input asp-for="CountInCategory" required="" placeholder="" type="number" class="input">
+
+        </label>
+        <span asp-validation-for="CountInCategory" class="text-danger"></span>
+    </div>
+    <label>
+        <span>Информационный листок</span>
+        <select asp-for="CategoryId" class="form-control" class="input" asp-items="ViewBag.CategoryId"></select>
+
+    </label>
+
+    <label>
+        <span>Картинка</span>
+      
+
+            <input type="file" accept="image/png, image/jpeg" class="input__file" name="picFromView">
+        
+    </label>
+    <span asp-validation-for="Img" class="text-danger"></span>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <button class="submitBtn">Изменить</button>
+    <a class="submitBtn" asp-action="Details" asp-controller="Categories">Назад</a>
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+

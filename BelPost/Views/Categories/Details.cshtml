@@ -1,0 +1,69 @@
+﻿@model BelPost.Models.Category
+
+@{
+    ViewData["Title"] = "Details";
+}
+<head>
+    <link rel="stylesheet" href="~/css/PostageStamp.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+@await Html.PartialAsync("_SearchView")
+
+@if (User.IsInRole("admin"))
+{
+    <a class="submitBtn" asp-controller="PostageStamps" asp-action="Create">Добавить</a>
+}
+
+<div class="containerPostageStampCard " style="height: 50vh; overflow:hidden;">
+    <div class="PostageStampCard noHover" style="width:60%; border:none;">
+        <div>
+            <a asp-action="Index">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+                </svg>
+                Назад
+            </a>
+        </div>
+        <p class="PostageStampName">@Model.Name</p>
+        <p class="PostageStampNumber">Листок №@Model.Id</p>
+        <p class="PostageStampNumber">@Model.Description</p>
+    </div>
+    <div class="imgContainer" style="width:30%; height:100%">
+        @if (Model.Img != null)
+        {
+            <img style="max-height: 100%;max-width: 100%;" class="result-box" src="data:image/png;base64,@(Convert.ToBase64String(Model.Img))" />
+        }
+
+    </div>
+
+</div>
+
+<div class="containerPostageStampCard">
+@foreach (var item in Model.PostageStamps)
+{
+    <a asp-action="Details" asp-controller="PostageStamps" asp-route-id="@item.Id">
+
+        <div class="PostageStampCard ">
+                <p class="PostageStampName name">
+                    @item.Name<br /><br />
+            <span class="PostageStampNumber">Марка №@item.Id</span></p>
+            <div class="Cirle"><p>@item.Letter</p></div>
+            <div class="imgContainer">
+                @if (item.Img != null)
+                {
+                    <img class="result-box" src="data:image/png;base64,@(Convert.ToBase64String(item.Img))" />
+                }
+            </div>
+            @if (User.IsInRole("admin"))
+            {
+                <div>
+                        <a class="btn btn-primary" asp-controller="PostageStamps" asp-route-id="@item.Id" asp-action="Edit">Изменить</a>
+                        <a class="btn btn-danger" asp-controller="PostageStamps" asp-route-id="@item.Id" asp-action="Delete">Удалить</a>
+                </div>
+            }
+
+        </div>
+    </a>
+}
+</div>

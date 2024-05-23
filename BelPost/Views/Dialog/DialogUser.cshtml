@@ -1,0 +1,57 @@
+﻿@model IEnumerable<BelPost.ViewModels.ProfileView>
+
+@{
+    ViewData["Title"] = "DialogUser";
+}
+<head>
+    <link rel="stylesheet" href="~/css/Chat.css" />
+</head>
+@await Html.PartialAsync("_SearchView")
+
+<div class="wrapper">
+<div class="card">
+  <section class="top">
+    <span class="u-l">Список диалогов:</span>
+  </section>
+  <section class="bottom">
+    <ul class="users">
+                @foreach (var item in Model)
+                {
+                    <li class="user">
+                        @if (item.Img != null)
+                        {
+                            <img src="data:image/png;base64,@(Convert.ToBase64String(item.Img))" />
+                        }
+                        else
+                        {
+                            <img  src="~/images/Icons/defaulfUser.png" />
+                        }
+                        <span class="user-name name">@item.FirstName @item.LastName</span>
+        <span class="user-occupation">@item.Email</span>
+                        <div class="ContainerButton">
+                            @if (item.IdWhoBlocked != null && ViewBag.IdUser != null && item.IdWhoBlocked.Contains(ViewBag.IdUser))
+                {
+                     <button class="request" type="button" style="width:100%">
+                        <a asp-controller="Account" asp-action="Unblock" asp-route-id="@item.Id">Разблокировать</a>
+                    </button>
+                }else if (item.IdWhoDidBlock != null && ViewBag.IdUser != null && item.IdWhoDidBlock.Contains(ViewBag.IdUser))
+                {
+                    <p class="name">Пользователь вас заблокировал</p>
+
+                }else {
+                                <button class="request" type="button">
+                                    <a asp-controller="Dialog" asp-action="IndexDialog" asp-route-IdReceiver="@item.UserName">Написать</a>
+
+                                </button>
+                                <button class="request" type="button">
+                                    <a asp-controller="Account" asp-action="Profile" asp-route-name="@item.UserName">Профиль</a>
+                                </button>
+                            }
+                        </div>
+      </li>
+                }
+    </ul>
+  </section>
+</div>
+</div>
+      
